@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -48,6 +51,10 @@ public class GuestControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(visitor)))
                 .andExpect(status().isCreated())
+                .andDo(document("visitor", responseFields(
+                        fieldWithPath("name").description("The name of the Visitor"),
+                        fieldWithPath("comment").description("The comment of the Visitor")
+                )))
                 .andExpect(jsonPath("$.name").value("Eric"))
                 .andExpect(jsonPath("$.comment").value("Very good"));
     }
@@ -69,6 +76,11 @@ public class GuestControllerTest {
 
         String actualVisitorsList = mockMvc.perform(get("/guest/visitors"))
                 .andExpect(status().isOk())
+                .andDo(document("visitors", responseFields(
+                        fieldWithPath("[]").description("Array of Visitors"),
+                        fieldWithPath("[].name").description("The name of the Visitor"),
+                        fieldWithPath("[].comment").description("The comment of the Visitor")
+                )))
                 .andReturn().getResponse().getContentAsString();
 
         String expected = objectMapper.writeValueAsString(expectedVisitorList);
