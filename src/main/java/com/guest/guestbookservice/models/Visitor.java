@@ -19,6 +19,8 @@ public class Visitor {
         this.comment = comment;
     }
 
+    public Visitor() {}
+
     public String getName() {
         return name;
     }
