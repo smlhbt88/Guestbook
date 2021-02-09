@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("guest")
+@RequestMapping("/")
 public class GuestController {
 
     GuestService guestService;
@@ -18,15 +18,22 @@ public class GuestController {
         this.guestService = guestService;
     }
 
-    @PostMapping("visitor")
+    @PostMapping("guest/visitor")
     @ResponseStatus(HttpStatus.CREATED)
     public VisitorDto addVisitor(@RequestBody Visitor visitor) {
         return guestService.addVisitor(visitor);
     }
 
-    @GetMapping("visitors")
+    @GetMapping("guest/visitors")
     @ResponseStatus(HttpStatus.OK)
     public List<VisitorDto> getAllVisitors() {
         return guestService.getAllVisitors();
     }
+
+    @GetMapping
+    public String home()
+    {
+        return "Hello Guest!";
+    }
+
 }
